@@ -1,14 +1,21 @@
-import nltk
-from nltk.tokenize import word_tokenize
-from nltk.util import ngrams
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 
-text= 'I am going to revolutionize the technology'
-tokens = word_tokenize(text)
+texts= ['I love AI.', 'I am goint to revolutionize AI.', 'AI is the future.', 'I love lions.', 'I love lions ego.', 'I love technology.', 'I love electric blue color.', 'I love super AI.', 'I love chatGPT.']
 
-unigrams = list(ngrams(tokens, 1))
-bigrams= list(ngrams(tokens, 2))
-trigrams = list(ngrams(tokens, 3))
+labels= ['AI', 'AI', 'AI', 'Lions', 'Lions', 'Technology', 'Color', 'AI', 'AI']
 
-print(unigrams)
-print(bigrams)
-print(trigrams)
+vectorizer= CountVectorizer()
+x= vectorizer.fit_transform(texts)
+
+x_train, x_test, y_train, y_test = train_test_split(x, labels, test_size=0.2, random_state=42)
+
+model = MultinomialNB()
+model.fit(x_train, y_train)
+
+y_pred = model.predict(x_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
